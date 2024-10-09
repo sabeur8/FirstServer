@@ -7,7 +7,8 @@ const Product = sequelize.define('Product',{
     
     id:{
         type: DataTypes.NUMBER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     },
     image:{
         type: DataTypes.STRING,
