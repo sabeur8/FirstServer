@@ -21,6 +21,10 @@ const User = sequelize.define('User', {
         allowNull: false,
         primaryKey: true
     },
+    password:{
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 },
 {
     tableName: 'users',  // Specify the exact table name in the database

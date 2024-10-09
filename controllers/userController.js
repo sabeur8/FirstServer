@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const bcrypt = require('bcrypt')
 
 exports.getAllUsers = (req, res) => {
     User.findAll()
@@ -25,15 +26,21 @@ exports.getUserById = (req,res) =>{
     })
 }
 
-exports.createUser = (req,res) => {
+exports.createUser =  async (req,res) => {
 
-    const {name, email, id} = req.body ;
-    User.create({name, email, id}).then(newUser =>{
-        res.status(201).json({message: "user created successfully"})
-    })
-    .catch(error =>{
-        res.status(500).json({ error: error.message })
-    })
+    const {name, email, id, password} = req.body ;
+
+    try {
+        const salt =  bcrypt.genSaltSync(10)
+        const hashedPassword =  bcrypt.hashSync(password, salt);
+        
+        const newUser =  await User.create({ name, email, id, password: hashedPassword });
+        res.status(201).json(newUser);
+
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: error.message });
+    }
 }
 
 exports.deleteUser = (req,res) => {
