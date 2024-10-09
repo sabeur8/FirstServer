@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 exports.getAllUsers = (req, res) => {
     User.findAll()
@@ -85,4 +86,26 @@ exports.updateUser = (req,res) => {
     .catch(error =>{
         res.status(500).json({error: error.message})
     })
+}
+
+exports.loginUser = async (req,res)=>{
+    data = req.body
+    const user = await User.findOne({ where: { email: data.email } });
+    if(!user){
+        res.status(404).send('user not found')
+    }
+    else{
+        validPass = bcrypt.compareSync(data.password, user.password)
+        if(!validPass){
+            res.status(401).send('invalid email or address')
+        }
+        else{
+            payLoad = {
+                id : user.id,
+                email: user.email
+            }
+            token = jwt.sign(payLoad, '123456565565664')
+            res.status(200).send({token: token})
+        }
+    }
 }
