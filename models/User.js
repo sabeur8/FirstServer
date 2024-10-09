@@ -20,8 +20,13 @@ const User = sequelize.define('User', {
         type: DataTypes.NUMBER,
         allowNull: false,
         primaryKey: true
-    }
-})
+    },
+},
+{
+    tableName: 'users',  // Specify the exact table name in the database
+    timestamps: false    // Disable automatic timestamps
+}
+)
 module.exports = User
 
 
